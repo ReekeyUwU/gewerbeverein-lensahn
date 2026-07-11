@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  REDAKTEUR
+  VORSTAND
+  MITGLIED
+  MODERATOR
+}
+
+enum MemberCategory {
+  HANDWERK
+  DIENSTLEISTUNG
+  GASTRONOMIE
+  HANDEL
+  INDUSTRIE
+  FREIE_BERUFE
+}
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  CANCELLED
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  role          Role     @default(MITGLIED)
+  isActive      Boolean  @default(true)
+  twoFactorSecret String?
+  twoFactorEnabled Boolean @default(false)
+  passkeyCredentials PasskeyCredential[]
+  refreshTokens RefreshToken[]
+  member        Member?
+  auditLogs     AuditLog[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PasskeyCredential {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialId String   @unique
+  publicKey    String
+  counter      Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Member {
+  id             String            @id @default(cuid())
+  userId         String?           @unique
+  user           User?             @relation(fields: [userId], references: [id])
+  companyName    String
+  slug           String            @unique
+  category       MemberCategory
+  description    String?           @db.Text
+  logoUrl        String?
+  street         String?
+  zip            String?
+  city           String?
+  phone          String?
+  email          String?
+  website        String?
+  instagramUrl   String?
+  facebookUrl    String?
+  linkedinUrl    String?
+  latitude       Float?
+  longitude      Float?
+  openingHours   Json?
+  services       Json?
+  isPremium      Boolean           @default(false)
+  status         MembershipStatus  @default(PENDING)
+  images         MemberImage[]
+  eventRegistrations EventRegistration[]
+  applications   MembershipApplication[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model MemberImage {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  url      String
+  altText  String?
+  sortOrder Int    @default(0)
+}
+
+model MembershipApplication {
+  id          String            @id @default(cuid())
+  memberId    String?
+  member      Member?           @relation(fields: [memberId], references: [id])
+  companyName String
+  contactName String
+  email       String
+  phone       String?
+  category    MemberCategory
+  message     String?           @db.Text
+  sepaMandateRef String?
+  signatureData  String?        @db.Text
+  status      ApplicationStatus @default(SUBMITTED)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Event {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  description    String?  @db.Text
+  category       String?
+  startAt        DateTime
+  endAt          DateTime?
+  location       String?
+  latitude       Float?
+  longitude      Float?
+  imageUrl       String?
+  maxParticipants Int?
+  registrationOpen Boolean @default(true)
+  registrations  EventRegistration[]
+  galleryAlbum   GalleryAlbum?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model EventRegistration {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  memberId  String?
+  member    Member?  @relation(fields: [memberId], references: [id])
+  name      String
+  email     String
+  guests    Int      @default(0)
+  waitlisted Boolean @default(false)
+  qrCode    String?  @unique
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  excerpt     String?
+  content     String     @db.Text
+  coverImageUrl String?
+  category    String?
+  tags        Json?
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
+  seoTitle    String?
+  seoDescription String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model GalleryAlbum {
+  id        String        @id @default(cuid())
+  title     String
+  slug      String        @unique
+  eventId   String?       @unique
+  event     Event?        @relation(fields: [eventId], references: [id])
+  coverUrl  String?
+  images    GalleryImage[]
+  createdAt DateTime      @default(now())
+}
+
+model GalleryImage {
+  id        String       @id @default(cuid())
+  albumId   String
+  album     GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  url       String
+  type      String       @default("image")
+  tags      Json?
+  sortOrder Int          @default(0)
+}
+
+model BoardMember {
+  id        String  @id @default(cuid())
+  name      String
+  position  String
+  portraitUrl String?
+  email     String?
+  phone     String?
+  linkedinUrl String?
+  sortOrder Int     @default(0)
+}
+
+model Sponsor {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String
+  websiteUrl String?
+  description String?
+  tier      String   @default("standard")
+  contractStart DateTime?
+  contractEnd   DateTime?
+  sortOrder Int      @default(0)
+}
+
+model Download {
+  id       String  @id @default(cuid())
+  title    String
+  category String?
+  fileUrl  String
+  fileType String?
+  sortOrder Int    @default(0)
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  confirmed     Boolean  @default(false)
+  confirmToken  String?  @unique
+  unsubscribeToken String @unique @default(cuid())
+  createdAt     DateTime @default(now())
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String?
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
