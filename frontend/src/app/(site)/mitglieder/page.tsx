@@ -26,7 +26,7 @@ export default async function MembersPage({
   searchParams: Promise<{ category?: string; search?: string }>;
 }) {
   const { category, search } = await searchParams;
-  const { members, total } = await getMembers({ category, search });
+  const { members, total } = await getMembers({ category, search, pageSize: "50" });
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
@@ -48,6 +48,16 @@ export default async function MembersPage({
           <Link key={member.id} href={`/mitglieder/${member.slug}`}>
             <Card className="h-full transition-shadow hover:shadow-lg">
               <CardContent className="flex h-full flex-col gap-3 p-6">
+                {member.logoUrl && (
+                  <div className="flex h-40 items-center justify-center rounded-lg bg-white p-5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={member.logoUrl}
+                      alt={member.companyName}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
                   <Badge variant="secondary">{categoryLabels[member.category] ?? member.category}</Badge>
                   {member.isPremium && <Badge>Premium</Badge>}

@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { mainNav, siteConfig } from "@/lib/site-config";
+import { mainNav } from "@/lib/site-config";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -17,11 +18,15 @@ export function SiteHeader() {
   return (
     <header className="glass fixed inset-x-0 top-0 z-50">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            GL
-          </span>
-          <span className="hidden sm:inline">{siteConfig.name}</span>
+        <Link href="/" className="flex items-center transition-transform hover:scale-[1.03]">
+          <Image
+            src="/brand/logo-wordmark.png"
+            alt="Gewerbeverein Lensahn e.V. – Aus Lensahn für Lensahn"
+            width={1600}
+            height={551}
+            priority
+            className="h-12 w-auto object-contain drop-shadow-sm"
+          />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">

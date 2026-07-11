@@ -22,6 +22,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+      {event.imageUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={event.imageUrl}
+          alt={event.title}
+          className="mb-8 aspect-[4/3] w-full rounded-2xl object-cover shadow-sm"
+        />
+      )}
       <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{event.title}</h1>
 
       <div className="mt-6 flex flex-wrap gap-6 text-sm text-muted-foreground">

@@ -1,8 +1,10 @@
 import express from "express";
+import type { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { rateLimit } from "express-rate-limit";
+import "express-async-errors";
 
 import { authRouter } from "@/routes/auth";
 import { membersRouter } from "@/routes/members";
@@ -45,6 +47,12 @@ export function createApp() {
   app.use("/api/uploads", uploadsRouter);
 
   app.use((_req, res) => res.status(404).json({ error: "Nicht gefunden" }));
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(err);
+    res.status(400).json({ error: "Ungueltige Anfrage" });
+  });
 
   return app;
 }

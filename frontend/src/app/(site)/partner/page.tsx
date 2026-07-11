@@ -22,7 +22,7 @@ export default async function PartnersPage() {
               href={sponsor.websiteUrl ?? "#"}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass flex h-24 items-center justify-center rounded-xl p-4"
+              className="club-card flex h-24 items-center justify-center rounded-xl p-4"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={sponsor.logoUrl} alt={sponsor.name} className="max-h-12 max-w-full object-contain" />

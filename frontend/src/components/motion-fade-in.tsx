@@ -24,3 +24,15 @@ export function FadeIn({
     </motion.div>
   );
 }
+
+export function Float({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <motion.div
+      animate={{ y: [0, -14, 0] }}
+      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}

@@ -24,29 +24,31 @@ export default async function EventsPage() {
 
       <section className="mt-12">
         <h2 className="text-xl font-semibold">Kommende Termine</h2>
-        <div className="mt-6 grid gap-4">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
           {upcoming.length === 0 && <p className="text-sm text-muted-foreground">Aktuell keine Termine geplant.</p>}
           {upcoming.map((event) => (
             <Link key={event.id} href={`/veranstaltungen/${event.slug}`}>
-              <Card className="transition-shadow hover:shadow-lg">
-                <CardContent className="flex flex-col gap-2 p-6 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold">{event.title}</h3>
-                    <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
+              <Card className="h-full overflow-hidden transition-shadow hover:shadow-lg">
+                {event.imageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={event.imageUrl} alt={event.title} className="aspect-[4/3] w-full object-cover" />
+                )}
+                <CardContent className="flex flex-col gap-2 p-6">
+                  <h3 className="text-lg font-semibold">{event.title}</h3>
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <CalendarDays className="size-4" />
+                      {new Date(event.startAt).toLocaleString("de-DE", {
+                        dateStyle: "long",
+                        timeStyle: "short",
+                      })}
+                    </span>
+                    {event.location && (
                       <span className="flex items-center gap-1.5">
-                        <CalendarDays className="size-4" />
-                        {new Date(event.startAt).toLocaleString("de-DE", {
-                          dateStyle: "long",
-                          timeStyle: "short",
-                        })}
+                        <MapPin className="size-4" />
+                        {event.location}
                       </span>
-                      {event.location && (
-                        <span className="flex items-center gap-1.5">
-                          <MapPin className="size-4" />
-                          {event.location}
-                        </span>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -58,10 +60,14 @@ export default async function EventsPage() {
       {past.length > 0 && (
         <section className="mt-16">
           <h2 className="text-xl font-semibold text-muted-foreground">Vergangene Veranstaltungen</h2>
-          <div className="mt-6 grid gap-4">
+          <div className="mt-6 grid gap-6 sm:grid-cols-2">
             {past.map((event) => (
               <Link key={event.id} href={`/veranstaltungen/${event.slug}`}>
-                <Card className="opacity-70 transition-opacity hover:opacity-100">
+                <Card className="h-full overflow-hidden opacity-70 transition-opacity hover:opacity-100">
+                  {event.imageUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={event.imageUrl} alt={event.title} className="aspect-[4/3] w-full object-cover" />
+                  )}
                   <CardContent className="p-6">
                     <h3 className="font-medium">{event.title}</h3>
                     <p className="mt-1 text-sm text-muted-foreground">

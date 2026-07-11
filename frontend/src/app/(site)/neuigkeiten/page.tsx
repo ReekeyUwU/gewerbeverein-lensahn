@@ -37,18 +37,24 @@ export default async function NewsPage() {
 
       <section className="mt-16">
         <h2 className="text-xl font-semibold">Presse</h2>
-        <div className="mt-6 grid gap-4">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {pressItems.map((item) => (
-            <Card key={`${item.outlet}-${item.date}`}>
-              <CardContent className="p-6">
-                <div className="flex flex-wrap items-center justify-between gap-2">
+            <Card key={`${item.outlet}-${item.date}`} className="overflow-hidden">
+              <div className="flex gap-4 p-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-28 w-20 shrink-0 rounded-md object-cover object-top shadow-sm"
+                />
+                <div className="min-w-0">
                   <h3 className="font-semibold">{item.title}</h3>
                   <span className="text-xs text-muted-foreground">
                     {item.outlet} · {new Date(item.date).toLocaleDateString("de-DE", { dateStyle: "medium" })}
                   </span>
+                  <p className="mt-2 text-sm text-muted-foreground">{item.summary}</p>
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">{item.summary}</p>
-              </CardContent>
+              </div>
             </Card>
           ))}
         </div>

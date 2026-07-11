@@ -88,7 +88,9 @@ export function MembershipApplicationForm() {
           <Label htmlFor="category">Branche</Label>
           <Select value={category} onValueChange={(value) => setCategory(value ?? "")} required>
             <SelectTrigger id="category" className="w-full">
-              <SelectValue placeholder="Branche auswählen" />
+              <SelectValue placeholder="Branche auswählen">
+                {(value: string) => categories.find((c) => c.value === value)?.label ?? "Branche auswählen"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {categories.map((c) => (

@@ -1,54 +1,94 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, CalendarDays, Handshake, Newspaper, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FadeIn } from "@/components/motion-fade-in";
+import { FadeIn, Float } from "@/components/motion-fade-in";
 import { getEvents, getMembers, getPosts } from "@/lib/server-api";
 import { aboutContent } from "@/lib/site-content";
 
+function shuffle<T>(input: T[]): T[] {
+  const array = [...input];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 export default async function HomePage() {
   const [{ members, total: memberCount }, events, { posts }] = await Promise.all([
-    getMembers(),
+    getMembers({ pageSize: "50" }),
     getEvents(true),
     getPosts(),
   ]);
 
   const upcomingEvents = events.slice(0, 3);
   const latestPosts = posts.slice(0, 3);
-  const featuredMembers = members.slice(0, 8);
+  const featuredMembers = shuffle(members).slice(0, 8);
 
   return (
     <div>
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,color-mix(in_oklch,var(--primary),transparent_85%),transparent_60%),radial-gradient(circle_at_80%_0%,color-mix(in_oklch,var(--primary),transparent_90%),transparent_50%)]" />
-        <div className="mx-auto max-w-7xl px-4 py-28 sm:px-6 lg:px-8 lg:py-36">
-          <FadeIn>
-            <Badge variant="secondary" className="mb-6">
-              Gegründet 2025 · Lensahn, Ostholstein
-            </Badge>
-          </FadeIn>
-          <FadeIn delay={0.05}>
-            <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-balance sm:text-6xl lg:text-7xl">
-              Aus Lensahn <span className="text-primary">–</span> Für Lensahn
-            </h1>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              Der Gewerbeverein Lensahn e.V. verbindet Unternehmen vor Ort, stärkt die Region und sorgt
-              gemeinsam dafür, dass Lensahn l(i)ebenswert bleibt.
-            </p>
-          </FadeIn>
-          <FadeIn delay={0.15}>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Button size="lg" render={<Link href="/mitglied-werden" />}>
-                Mitglied werden
-                <ArrowRight className="size-4" />
-              </Button>
-              <Button size="lg" variant="outline" render={<Link href="/mitglieder" />}>
-                Unternehmen entdecken
-              </Button>
-            </div>
+      <section className="relative isolate overflow-hidden">
+        <Image
+          src="/brand/hero-lake.jpg"
+          alt="See bei Lensahn"
+          fill
+          priority
+          sizes="100vw"
+          className="-z-20 object-cover"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/50 to-black/20" />
+        <div className="absolute inset-x-0 top-0 -z-10 h-2 bg-primary" aria-hidden />
+
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-28 sm:px-6 lg:grid-cols-[3fr_2fr] lg:px-8 lg:py-40">
+          <div>
+            <FadeIn>
+              <Badge className="mb-6 border-none bg-primary text-primary-foreground">
+                🦌 Gegründet 2025 · Lensahn, Ostholstein
+              </Badge>
+            </FadeIn>
+            <FadeIn delay={0.05}>
+              <p className="text-lg font-medium text-primary-foreground/90 drop-shadow-sm">Schön, dass Du da bist!</p>
+              <h1 className="mt-2 max-w-3xl text-5xl font-semibold tracking-tight text-balance text-white drop-shadow-sm sm:text-6xl">
+                Aus Lensahn <span className="text-primary">–</span> Für Lensahn
+              </h1>
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <p className="mt-6 max-w-xl text-lg text-white/85 drop-shadow-sm">
+                Der Gewerbeverein Lensahn e.V. verbindet Unternehmen vor Ort, stärkt die Region und sorgt
+                gemeinsam dafür, dass Lensahn l(i)ebenswert bleibt.
+              </p>
+            </FadeIn>
+            <FadeIn delay={0.15}>
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Button size="lg" render={<Link href="/mitglied-werden" />}>
+                  Mitglied werden
+                  <ArrowRight className="size-4" />
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white/40 bg-white/10 text-white hover:bg-white/20"
+                  render={<Link href="/mitglieder" />}
+                >
+                  Unternehmen entdecken
+                </Button>
+              </div>
+            </FadeIn>
+          </div>
+          <FadeIn delay={0.1} className="hidden justify-self-center lg:block">
+            <Float>
+              <Image
+                src="/brand/hirsch-lenni.png"
+                alt="Hirsch Lenni, das Maskottchen des Gewerbeverein Lensahn"
+                width={640}
+                height={640}
+                className="w-72 drop-shadow-2xl"
+                priority
+              />
+            </Float>
           </FadeIn>
         </div>
       </section>
@@ -83,7 +123,7 @@ export default async function HomePage() {
             </Button>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <Card className="glass">
+            <Card className="club-card">
               <CardContent className="grid gap-4 p-6">
                 {aboutContent.goals.slice(0, 5).map((goal) => (
                   <div key={goal} className="flex items-start gap-3">
@@ -152,9 +192,18 @@ export default async function HomePage() {
                 <Link
                   key={member.id}
                   href={`/mitglieder/${member.slug}`}
-                  className="glass flex h-24 items-center justify-center rounded-xl px-4 text-center text-sm font-medium transition-transform hover:-translate-y-0.5"
+                  className="club-card flex h-28 items-center justify-center rounded-xl bg-white p-4 transition-transform hover:-translate-y-0.5 hover:border-primary/40"
                 >
-                  {member.companyName}
+                  {member.logoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.logoUrl}
+                      alt={member.companyName}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-center text-sm font-medium">{member.companyName}</span>
+                  )}
                 </Link>
               ))}
             </div>
@@ -188,15 +237,23 @@ export default async function HomePage() {
       </section>
 
       <section className="border-t border-border">
-        <div className="mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Werde Teil des Netzwerks</h2>
-          <p className="mt-4 text-muted-foreground">
-            Gemeinsam gestalten wir die Zukunft Lensahns – als starke Stimme für den lokalen Handel und das
-            Handwerk.
-          </p>
-          <Button size="lg" className="mt-8" render={<Link href="/mitglied-werden" />}>
-            Jetzt Mitglied werden
-          </Button>
+        <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 py-24 sm:px-6 lg:grid-cols-[1fr_auto] lg:px-8">
+          <div className="text-center lg:text-left">
+            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Werde Teil des Netzwerks</h2>
+            <p className="mt-4 text-muted-foreground">
+              Gemeinsam gestalten wir die Zukunft Lensahns – als starke Stimme für den lokalen Handel und das
+              Handwerk.
+            </p>
+            <Button size="lg" className="mt-8" render={<Link href="/mitglied-werden" />}>
+              Jetzt Mitglied werden
+            </Button>
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/community-moin.png"
+            alt="Moin! Gemeinsam als Gewerbeverein Lensahn"
+            className="mx-auto size-56 rounded-full object-contain sm:size-64"
+          />
         </div>
       </section>
     </div>

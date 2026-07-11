@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { FadeIn } from "@/components/motion-fade-in";
 import { aboutContent } from "@/lib/site-content";
 
@@ -26,15 +27,33 @@ export default function AboutPage() {
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <section className="mt-12 rounded-2xl bg-secondary/60 p-8">
-          <h2 className="text-2xl font-semibold">Unsere Mission</h2>
-          <p className="mt-4 text-lg font-medium">{aboutContent.mission}</p>
+        <section className="mt-12 flex flex-col items-center gap-6 rounded-2xl bg-secondary/60 p-8 sm:flex-row">
+          <Image
+            src="/legacy-photos/icon-ziele.png"
+            alt="Ziele-Symbol"
+            width={640}
+            height={640}
+            className="size-24 shrink-0 object-contain"
+          />
+          <div>
+            <h2 className="text-2xl font-semibold">Unsere Mission</h2>
+            <p className="mt-4 text-lg font-medium">{aboutContent.mission}</p>
+          </div>
         </section>
       </FadeIn>
 
       <FadeIn delay={0.15}>
         <section className="mt-12">
-          <h2 className="text-2xl font-semibold">Unsere Ziele</h2>
+          <div className="flex items-center gap-4">
+            <Image
+              src="/legacy-photos/icon-zusammenhalt.png"
+              alt="Zusammenhalt-Symbol"
+              width={640}
+              height={640}
+              className="size-16 shrink-0 object-contain"
+            />
+            <h2 className="text-2xl font-semibold">Unsere Ziele</h2>
+          </div>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {aboutContent.goals.map((goal) => (
               <li key={goal} className="flex items-start gap-3 rounded-xl border border-border p-4">

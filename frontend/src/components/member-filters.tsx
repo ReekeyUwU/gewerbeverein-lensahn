@@ -55,7 +55,9 @@ export function MemberFilters() {
         onValueChange={(value) => updateParam("category", value ?? "ALL")}
       >
         <SelectTrigger className="sm:w-56">
-          <SelectValue placeholder="Branche" />
+          <SelectValue placeholder="Branche">
+            {(value: string) => categories.find((c) => c.value === value)?.label ?? "Branche"}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {categories.map((c) => (

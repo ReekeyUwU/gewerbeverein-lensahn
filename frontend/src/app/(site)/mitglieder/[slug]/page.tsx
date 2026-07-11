@@ -35,6 +35,12 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ s
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
+      {member.logoUrl && (
+        <div className="mb-8 flex h-48 w-full max-w-sm items-center justify-center rounded-xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={member.logoUrl} alt={member.companyName} className="max-h-full max-w-full object-contain" />
+        </div>
+      )}
       <Badge variant="secondary">{categoryLabels[member.category] ?? member.category}</Badge>
       <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">{member.companyName}</h1>
 

@@ -129,23 +129,27 @@ export const pressItems = [
     date: "2025-11-26",
     title: "Musik, Genuss und Weihnachtsfreude",
     summary: "Bericht über den Lensahner Weihnachtsmarkt vom 28. bis 30. November auf dem Kirchplatz.",
+    image: "/legacy-photos/presse-clip-1.png",
   },
   {
     outlet: "Lübecker Nachrichten",
     date: "2025-07-11",
     title: "Gewerbetreibende feiern Sommerfest",
     summary: "Berichterstattung über das gemeinsame Sommerfest der Lensahner Unternehmen im Gewerbegebiet.",
+    image: "/legacy-photos/presse-clip-2.png",
   },
   {
     outlet: "Reporter Neustadt",
     date: "2025-07-09",
     title: "Gewerbe-Sommerfest angekündigt",
     summary: "Ankündigung des für den 12. Juli in Lensahn geplanten Events.",
+    image: "/legacy-photos/presse-clip-3.png",
   },
   {
     outlet: "Reporter Oldenburg",
     date: "2025-07-09",
     title: "Gewerbeverein feiert Sommerfest",
     summary: "Kurzmeldung zum gleichen Juli-Event.",
+    image: "/legacy-photos/presse-clip-4.png",
   },
 ];

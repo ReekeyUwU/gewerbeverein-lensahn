@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { footerNav, siteConfig } from "@/lib/site-config";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { FacebookIcon, InstagramIcon, LinkedinIcon } from "@/components/social-icons";
@@ -10,12 +11,13 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[2fr_3fr]">
           <div>
-            <div className="flex items-center gap-2 font-semibold tracking-tight">
-              <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                GL
-              </span>
-              <span>{siteConfig.name}</span>
-            </div>
+            <Image
+              src="/brand/logo-wordmark.png"
+              alt="Gewerbeverein Lensahn e.V."
+              width={1600}
+              height={551}
+              className="h-16 w-auto object-contain"
+            />
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">{siteConfig.description}</p>
             <div className="mt-6 flex items-center gap-3">
               <Link href="#" aria-label="Instagram" className="rounded-full border border-border p-2 hover:bg-accent">

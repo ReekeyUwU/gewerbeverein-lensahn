@@ -85,8 +85,11 @@ export interface GalleryAlbum {
   images: { id: string; url: string; type: string }[];
 }
 
-export async function getMembers(params?: { category?: string; search?: string }) {
-  const query = new URLSearchParams(params as Record<string, string>).toString();
+export async function getMembers(params?: { category?: string; search?: string; pageSize?: string }) {
+  const entries = Object.entries(params ?? {}).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string" && entry[1].length > 0,
+  );
+  const query = new URLSearchParams(entries).toString();
   return safeFetch<{ members: Member[]; total: number }>(
     `/api/members${query ? `?${query}` : ""}`,
     { members: [], total: 0 },
@@ -105,8 +108,8 @@ export async function getEvent(slug: string) {
   return safeFetch<EventItem | null>(`/api/events/${slug}`, null);
 }
 
-export async function getPosts() {
-  return safeFetch<{ posts: Post[]; total: number }>(`/api/posts`, { posts: [], total: 0 });
+export async function getPosts(pageSize = 50) {
+  return safeFetch<{ posts: Post[]; total: number }>(`/api/posts?pageSize=${pageSize}`, { posts: [], total: 0 });
 }
 
 export async function getPost(slug: string) {

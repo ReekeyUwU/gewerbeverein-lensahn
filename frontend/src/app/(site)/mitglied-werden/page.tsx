@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Check } from "lucide-react";
 import { FadeIn } from "@/components/motion-fade-in";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,6 +36,16 @@ export default function MembershipPage() {
           ))}
         </div>
         <p className="mt-8 text-center text-sm text-muted-foreground">{membershipContent.perks}</p>
+
+        <div className="mt-16 overflow-hidden rounded-2xl border border-border">
+          <Image
+            src="/legacy-photos/mitgliedschaft-vorteile-infografik.png"
+            alt="Übersicht: Vorteile einer Mitgliedschaft im Gewerbeverein Lensahn"
+            width={2000}
+            height={1414}
+            className="w-full object-contain"
+          />
+        </div>
       </section>
 
       <section className="border-y border-border bg-secondary/40 py-20">
@@ -63,7 +74,16 @@ export default function MembershipPage() {
       </section>
 
       <section id="antrag" className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-semibold">Jetzt Mitglied werden</h2>
+        <div className="flex items-center gap-4">
+          <Image
+            src="/legacy-photos/icon-faq.png"
+            alt="FAQ-Symbol"
+            width={640}
+            height={640}
+            className="size-14 shrink-0 object-contain"
+          />
+          <h2 className="text-2xl font-semibold">Jetzt Mitglied werden</h2>
+        </div>
         <p className="mt-2 text-muted-foreground">
           Fülle den Online-Antrag aus – wir melden uns anschließend per E-Mail mit den nächsten Schritten.
         </p>

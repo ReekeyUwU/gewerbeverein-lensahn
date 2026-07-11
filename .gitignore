@@ -10,3 +10,4 @@ Thumbs.db
 docker/mysql-data/
 docker/redis-data/
 docker/minio-data/
+.minio-data/
