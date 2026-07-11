@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FadeIn, Float } from "@/components/motion-fade-in";
+import { CountUp } from "@/components/count-up";
+import { LogoMarquee } from "@/components/logo-marquee";
 import { getEvents, getMembers, getPosts } from "@/lib/server-api";
 import { aboutContent } from "@/lib/site-content";
 
@@ -93,24 +95,35 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-secondary/40">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
+      <section className="relative overflow-hidden bg-primary">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-12 text-primary-foreground sm:px-6 lg:grid-cols-4 lg:px-8">
           {[
-            { label: "Mitgliedsunternehmen", value: `${memberCount || 26}+`, icon: Users },
-            { label: "Veranstaltungen pro Jahr", value: "6+", icon: CalendarDays },
-            { label: "Gegründet", value: "2025", icon: Handshake },
-            { label: "Presseberichte", value: "4+", icon: Newspaper },
+            { label: "Mitgliedsunternehmen", value: memberCount || 26, suffix: "+", icon: Users },
+            { label: "Veranstaltungen pro Jahr", value: 6, suffix: "+", icon: CalendarDays },
+            { label: "Gegründet", value: 2025, suffix: "", icon: Handshake },
+            { label: "Presseberichte", value: 4, suffix: "+", icon: Newspaper },
           ].map((stat) => (
             <FadeIn key={stat.label}>
               <div className="flex flex-col items-start gap-2">
-                <stat.icon className="size-6 text-primary" />
-                <span className="text-3xl font-semibold">{stat.value}</span>
-                <span className="text-sm text-muted-foreground">{stat.label}</span>
+                <stat.icon className="size-6" />
+                <span className="text-3xl font-semibold">
+                  <CountUp value={stat.value} suffix={stat.suffix} />
+                </span>
+                <span className="text-sm text-primary-foreground/80">{stat.label}</span>
               </div>
             </FadeIn>
           ))}
         </div>
       </section>
+
+      {members.length > 0 && (
+        <section className="border-b border-border bg-secondary/30 py-10">
+          <p className="mx-auto mb-6 max-w-7xl px-4 text-center text-xs font-medium tracking-wide text-muted-foreground uppercase sm:px-6 lg:px-8">
+            Getragen von {members.length} Unternehmen aus Lensahn
+          </p>
+          <LogoMarquee members={members} />
+        </section>
+      )}
 
       <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -123,7 +136,19 @@ export default async function HomePage() {
             </Button>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <Card className="club-card">
+            <Card className="club-card overflow-hidden !p-0">
+              <div className="relative h-40 w-full">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/brand/hero-lake.jpg" alt="" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <Image
+                  src="/legacy-photos/icon-ziele.png"
+                  alt="Ziele-Symbol"
+                  width={640}
+                  height={640}
+                  className="absolute bottom-2 right-2 size-14 object-contain drop-shadow-lg"
+                />
+              </div>
               <CardContent className="grid gap-4 p-6">
                 {aboutContent.goals.slice(0, 5).map((goal) => (
                   <div key={goal} className="flex items-start gap-3">

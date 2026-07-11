@@ -7,7 +7,8 @@ import { CookieSettingsLink } from "@/components/cookie-consent";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-secondary/40">
+    <footer className="relative overflow-hidden bg-[#211e1a] text-[#f4efe6]">
+      <div className="absolute inset-x-0 top-0 h-1 bg-primary" aria-hidden />
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[2fr_3fr]">
           <div>
@@ -18,15 +19,15 @@ export function SiteFooter() {
               height={551}
               className="h-16 w-auto object-contain"
             />
-            <p className="mt-4 max-w-sm text-sm text-muted-foreground">{siteConfig.description}</p>
+            <p className="mt-4 max-w-sm text-sm text-[#f4efe6]/70">{siteConfig.description}</p>
             <div className="mt-6 flex items-center gap-3">
-              <Link href="#" aria-label="Instagram" className="rounded-full border border-border p-2 hover:bg-accent">
+              <Link href="#" aria-label="Instagram" className="rounded-full border border-white/15 p-2 hover:bg-white/10">
                 <InstagramIcon className="size-4" />
               </Link>
-              <Link href="#" aria-label="Facebook" className="rounded-full border border-border p-2 hover:bg-accent">
+              <Link href="#" aria-label="Facebook" className="rounded-full border border-white/15 p-2 hover:bg-white/10">
                 <FacebookIcon className="size-4" />
               </Link>
-              <Link href="#" aria-label="LinkedIn" className="rounded-full border border-border p-2 hover:bg-accent">
+              <Link href="#" aria-label="LinkedIn" className="rounded-full border border-white/15 p-2 hover:bg-white/10">
                 <LinkedinIcon className="size-4" />
               </Link>
             </div>
@@ -38,11 +39,11 @@ export function SiteFooter() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {footerNav.map((section) => (
               <div key={section.title}>
-                <h3 className="text-sm font-semibold text-foreground">{section.title}</h3>
+                <h3 className="text-sm font-semibold text-[#f4efe6]">{section.title}</h3>
                 <ul className="mt-4 space-y-2">
                   {section.links.map((link) => (
                     <li key={link.href}>
-                      <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
+                      <Link href={link.href} className="text-sm text-[#f4efe6]/70 hover:text-[#f4efe6]">
                         {link.title}
                       </Link>
                     </li>
@@ -53,11 +54,11 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted-foreground sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-[#f4efe6]/70 sm:flex-row">
           <p>© {new Date().getFullYear()} {siteConfig.name}. Alle Rechte vorbehalten.</p>
           <div className="flex gap-4">
-            <Link href="/impressum" className="hover:text-foreground">Impressum</Link>
-            <Link href="/datenschutz" className="hover:text-foreground">Datenschutz</Link>
+            <Link href="/impressum" className="hover:text-[#f4efe6]">Impressum</Link>
+            <Link href="/datenschutz" className="hover:text-[#f4efe6]">Datenschutz</Link>
             <CookieSettingsLink />
           </div>
         </div>

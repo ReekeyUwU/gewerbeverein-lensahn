@@ -48,6 +48,7 @@ export interface Post {
   content: string;
   coverImageUrl: string | null;
   category: string | null;
+  status: "DRAFT" | "SCHEDULED" | "PUBLISHED" | "ARCHIVED";
   publishedAt: string | null;
   seoTitle: string | null;
 }

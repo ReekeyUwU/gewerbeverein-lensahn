@@ -14,6 +14,7 @@ import {
   Download,
   UserCog,
   Inbox,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminAuth } from "@/lib/admin-auth";
@@ -28,6 +29,7 @@ const navItems = [
   { title: "Downloads", href: "/admin/downloads", icon: Download },
   { title: "Vorstand", href: "/admin/vorstand", icon: UserCog },
   { title: "Anträge & Kontakt", href: "/admin/antraege", icon: Inbox },
+  { title: "Benutzerkonten", href: "/admin/benutzer", icon: ShieldCheck, adminOnly: true },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -51,7 +53,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <p className="text-xs text-muted-foreground">Admin Control Panel</p>
         </div>
         <nav className="space-y-1">
-          {navItems.map((item) => (
+          {navItems
+            .filter((item) => !item.adminOnly || user.role === "ADMIN")
+            .map((item) => (
             <Link
               key={item.href}
               href={item.href}

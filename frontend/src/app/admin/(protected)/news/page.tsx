@@ -2,11 +2,10 @@
 
 import * as React from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -23,7 +22,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAdminAuth } from "@/lib/admin-auth";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import type { Post } from "@/lib/server-api";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 function slugify(input: string) {
   return input
@@ -34,11 +36,14 @@ function slugify(input: string) {
 }
 
 export default function AdminNewsPage() {
-  const { adminFetch } = useAdminAuth();
+  const { adminFetch, accessToken } = useAdminAuth();
   const [posts, setPosts] = React.useState<Post[]>([]);
   const [open, setOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Post | null>(null);
   const [status, setStatus] = React.useState("DRAFT");
+  const [content, setContent] = React.useState("");
+  const [coverImageUrl, setCoverImageUrl] = React.useState<string | null>(null);
+  const [uploadingCover, setUploadingCover] = React.useState(false);
 
   async function load() {
     const res = await adminFetch<{ posts: Post[] }>("/api/posts?pageSize=100");
@@ -50,6 +55,43 @@ export default function AdminNewsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function handleCoverUpload(file: File | null) {
+    if (!file) return;
+    setUploadingCover(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch(`${API_BASE_URL}/api/uploads/image`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        body,
+      });
+      if (!res.ok) throw new Error("Upload fehlgeschlagen");
+      const { url } = await res.json();
+      setCoverImageUrl(url);
+      toast.success("Titelbild hochgeladen");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload fehlgeschlagen");
+    } finally {
+      setUploadingCover(false);
+    }
+  }
+
+  function openCreate() {
+    setEditing(null);
+    setStatus("DRAFT");
+    setContent("");
+    setCoverImageUrl(null);
+  }
+
+  function openEdit(post: Post) {
+    setEditing(post);
+    setStatus(post.status);
+    setContent(post.content);
+    setCoverImageUrl(post.coverImageUrl);
+    setOpen(true);
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
@@ -58,11 +100,17 @@ export default function AdminNewsPage() {
       title,
       slug: editing?.slug ?? slugify(title),
       excerpt: String(form.get("excerpt") ?? ""),
-      content: String(form.get("content") ?? ""),
+      content,
+      coverImageUrl: coverImageUrl ?? undefined,
       category: String(form.get("category") ?? ""),
       status,
       publishedAt: status === "PUBLISHED" ? new Date().toISOString() : undefined,
     };
+
+    if (!content || content === "<p></p>") {
+      toast.error("Bitte einen Inhalt schreiben");
+      return;
+    }
 
     try {
       if (editing) {
@@ -98,19 +146,10 @@ export default function AdminNewsPage() {
             if (!next) setEditing(null);
           }}
         >
-          <DialogTrigger
-            render={
-              <Button
-                onClick={() => {
-                  setEditing(null);
-                  setStatus("DRAFT");
-                }}
-              />
-            }
-          >
+          <DialogTrigger render={<Button onClick={openCreate} />}>
             <Plus className="size-4" /> Neuer Beitrag
           </DialogTrigger>
-          <DialogContent className="max-w-lg">
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>{editing ? "Beitrag bearbeiten" : "Neuer Beitrag"}</DialogTitle>
             </DialogHeader>
@@ -128,14 +167,32 @@ export default function AdminNewsPage() {
                 <Input id="excerpt" name="excerpt" defaultValue={editing?.excerpt ?? ""} />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="content">Inhalt</Label>
-                <Textarea id="content" name="content" rows={8} defaultValue={editing?.content ?? ""} required />
+                <Label>Titelbild</Label>
+                {coverImageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={coverImageUrl} alt="" className="aspect-[3/1] w-full rounded-lg object-cover" />
+                )}
+                <Label htmlFor="coverImage" className="flex w-fit cursor-pointer items-center gap-2 text-sm text-primary">
+                  <Upload className="size-4" />
+                  {uploadingCover ? "Lädt hoch..." : "Titelbild auswählen"}
+                </Label>
+                <input
+                  id="coverImage"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleCoverUpload(e.target.files?.[0] ?? null)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Inhalt</Label>
+                <RichTextEditor content={content} onChange={setContent} accessToken={accessToken} />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="status">Status</Label>
                 <Select value={status} onValueChange={(v) => setStatus(v ?? "DRAFT")}>
                   <SelectTrigger id="status" className="w-full">
-                    <SelectValue />
+                    <SelectValue>{(value: string) => statusLabels[value] ?? value}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="DRAFT">Entwurf</SelectItem>
@@ -159,14 +216,7 @@ export default function AdminNewsPage() {
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="secondary">{post.category ?? "—"}</Badge>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => {
-                  setEditing(post);
-                  setOpen(true);
-                }}
-              >
+              <Button variant="ghost" size="icon-sm" onClick={() => openEdit(post)}>
                 <Pencil className="size-4" />
               </Button>
               <Button variant="ghost" size="icon-sm" onClick={() => handleDelete(post.id)}>
@@ -180,3 +230,9 @@ export default function AdminNewsPage() {
     </div>
   );
 }
+
+const statusLabels: Record<string, string> = {
+  DRAFT: "Entwurf",
+  PUBLISHED: "Veröffentlicht",
+  ARCHIVED: "Archiviert",
+};

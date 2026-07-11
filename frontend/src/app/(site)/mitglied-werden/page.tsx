@@ -3,6 +3,12 @@ import Image from "next/image";
 import { Check } from "lucide-react";
 import { FadeIn } from "@/components/motion-fade-in";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import { MembershipApplicationForm } from "@/components/membership-application-form";
 import { membershipContent } from "@/lib/site-content";
 
@@ -73,7 +79,7 @@ export default function MembershipPage() {
         </div>
       </section>
 
-      <section id="antrag" className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <Image
             src="/legacy-photos/icon-faq.png"
@@ -82,8 +88,22 @@ export default function MembershipPage() {
             height={640}
             className="size-14 shrink-0 object-contain"
           />
-          <h2 className="text-2xl font-semibold">Jetzt Mitglied werden</h2>
+          <h2 className="text-2xl font-semibold">Häufige Fragen</h2>
         </div>
+        <Accordion className="mt-8">
+          {membershipContent.faq.map((item, i) => (
+            <AccordionItem key={item.question} value={`faq-${i}`}>
+              <AccordionTrigger>{item.question}</AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">{item.answer}</p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </section>
+
+      <section id="antrag" className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-semibold">Jetzt Mitglied werden</h2>
         <p className="mt-2 text-muted-foreground">
           Fülle den Online-Antrag aus – wir melden uns anschließend per E-Mail mit den nächsten Schritten.
         </p>

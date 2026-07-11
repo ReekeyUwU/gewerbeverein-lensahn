@@ -1,5 +1,6 @@
 import express from "express";
 import type { NextFunction, Request, Response } from "express";
+import path from "path";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -16,6 +17,7 @@ import { downloadsRouter } from "@/routes/downloads";
 import { boardRouter } from "@/routes/board";
 import { publicFormsRouter } from "@/routes/public-forms";
 import { uploadsRouter } from "@/routes/uploads";
+import { usersRouter } from "@/routes/users";
 
 export function createApp() {
   const app = express();
@@ -35,6 +37,15 @@ export function createApp() {
 
   app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
+  app.use(
+    "/uploads",
+    (req, res, next) => {
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+      next();
+    },
+    express.static(process.env.UPLOAD_DIR ?? path.join(process.cwd(), "uploads")),
+  );
+
   app.use("/api/auth", authRouter);
   app.use("/api/members", membersRouter);
   app.use("/api/events", eventsRouter);
@@ -45,6 +56,7 @@ export function createApp() {
   app.use("/api/board", boardRouter);
   app.use("/api/forms", publicFormsRouter);
   app.use("/api/uploads", uploadsRouter);
+  app.use("/api/users", usersRouter);
 
   app.use((_req, res) => res.status(404).json({ error: "Nicht gefunden" }));
 

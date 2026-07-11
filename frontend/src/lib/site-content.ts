@@ -69,6 +69,23 @@ export const membershipContent = {
   },
   eligibility:
     "Voraussetzung ist ein Gewerbebetrieb in der Gemeinde Lensahn mit entsprechender Rechts- und Geschäftsfähigkeit. Ausnahmen bestehen bei nachgewiesenem fortlaufenden Bezug zum Ort. Jedes Unternehmen hat eine Stimme.",
+  faq: [
+    {
+      question: "Wie hoch sind die Beiträge?",
+      answer:
+        "Die Beiträge werden in der Jahreshauptversammlung Anfang eines jeden Jahres durch die Mitglieder beschlossen. Mitgliedsbeitrag für 2026: 250,00 €. Aufnahmegebühr: 0,00 €. Der Mitgliedsbeitrag für Jungunternehmer/-innen entfällt, wenn der Vereinsbeitritt im Jahr der Gründung/Geschäftsübernahme erfolgt. Der Mitgliedsbeitrag kann in Anbetracht der Offenheit des Vereins zudem in Ausnahmefällen reduziert werden.",
+    },
+    {
+      question: "Wer kann Mitglied im Gewerbeverein Lensahn werden?",
+      answer:
+        "Jede geschäftsfähige, natürliche oder juristische Person des Privatrechts, die ein Unternehmen in der Gemeinde Lensahn führt, kann ordentliches Mitglied im Verein werden. Ausgeschlossen sind aufgrund anderer gesellschaftlicher Strukturen und Risiken juristische Personen des Öffentlichen Rechts sowie Personen, deren Unternehmensstandort außerhalb der Gemeinde Lensahn liegt. Ausnahmen bezüglich des Standorts sind bei einer bestehenden und anhaltenden Verbindung des Unternehmens zur Gemeinde Lensahn möglich. Natürliche Personen ohne Unternehmereigenschaft können ausnahmsweise aufgenommen werden, wenn sie bei der Verfolgung des Vereinszwecks in besonderer Weise mitwirken.",
+    },
+    {
+      question: "Wir sind 3 Gesellschafter. Wie viele Stimmen haben wir?",
+      answer:
+        "Jedes Unternehmen hat eine Stimme. Je nach Gesellschaftsvertrag kann diese Stimme in Einzel- oder Gesamtvertretung ausgeübt werden. In der Mitgliederversammlung wird die Stimmabgabe des anwesenden Gesellschafters als legitimiert angesehen. Bei Anwesenheit mehrerer Gesellschafter und deren Unstimmigkeit oder bei Zweifeln an der Legitimierung wird die Stimme als ungültig gewertet.",
+    },
+  ],
 };
 
 export const satzungContent = {
