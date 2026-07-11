@@ -39,7 +39,12 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-2xl border border-border p-8">
+      <form
+        onSubmit={handleSubmit}
+        method="post"
+        action="/admin/login"
+        className="w-full max-w-sm rounded-2xl border border-border p-8"
+      >
         <h1 className="text-xl font-semibold">Admin-Login</h1>
         <p className="mt-1 text-sm text-muted-foreground">Gewerbeverein Lensahn e.V.</p>
 

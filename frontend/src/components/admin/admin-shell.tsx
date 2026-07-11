@@ -10,6 +10,10 @@ import {
   Newspaper,
   Images,
   LogOut,
+  Handshake,
+  Download,
+  UserCog,
+  Inbox,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminAuth } from "@/lib/admin-auth";
@@ -20,6 +24,10 @@ const navItems = [
   { title: "Veranstaltungen", href: "/admin/veranstaltungen", icon: CalendarDays },
   { title: "News", href: "/admin/news", icon: Newspaper },
   { title: "Galerie", href: "/admin/galerie", icon: Images },
+  { title: "Sponsoren", href: "/admin/sponsoren", icon: Handshake },
+  { title: "Downloads", href: "/admin/downloads", icon: Download },
+  { title: "Vorstand", href: "/admin/vorstand", icon: UserCog },
+  { title: "Anträge & Kontakt", href: "/admin/antraege", icon: Inbox },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

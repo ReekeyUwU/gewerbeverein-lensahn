@@ -20,6 +20,16 @@ publicFormsRouter.post("/contact", async (req, res) => {
   res.status(201).json({ success: true, id: submission.id });
 });
 
+publicFormsRouter.get("/contact", requireAuth, requireRole("ADMIN", "VORSTAND"), async (_req, res) => {
+  const submissions = await prisma.contactSubmission.findMany({ orderBy: { createdAt: "desc" } });
+  res.json(submissions);
+});
+
+publicFormsRouter.delete("/contact/:id", requireAuth, requireRole("ADMIN", "VORSTAND"), async (req, res) => {
+  await prisma.contactSubmission.delete({ where: { id: req.params.id } });
+  res.status(204).send();
+});
+
 const newsletterSchema = z.object({ email: z.string().email() });
 
 publicFormsRouter.post("/newsletter/subscribe", async (req, res) => {
